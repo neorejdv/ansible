@@ -1,5 +1,6 @@
 {# Dit is een template voor motd en zo begin je commentaar #}
 
+Made on: {{ ansible_date_time.date }}
 Welcome to {{ ansible_hostname }}
 The hostname is: {{ ansible_facts['fqdn'] }}
 The default IPv4 address of this host is: {{ ansible_facts['default_ipv4']['address'] }}
