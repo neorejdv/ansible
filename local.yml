@@ -1,6 +1,6 @@
 ---
 - name: Gebruik een template om de motd te vullen met informatie uit facts
-  hosts: ALL 
+  hosts: localhost 
   become: true
 
   tasks:
@@ -11,3 +11,7 @@
         owner: root
         group: root
         mode: "0644"
+
+    - name: Install software
+      apt:
+        name: htop
