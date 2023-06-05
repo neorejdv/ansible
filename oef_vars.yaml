@@ -1,0 +1,19 @@
+---
+- name: Install Packages
+  hosts: localhost
+  vars:
+    packages:
+      - aap
+      - noot
+      - mies
+      - vuur
+
+  tasks:
+    - name: Install Shit
+      debug:
+        msg: "{{ packages }}"
+
+    - name: display extra vars 
+      debug:
+        msg: "{{ myvars }}"
+...
