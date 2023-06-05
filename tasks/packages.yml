@@ -1,0 +1,6 @@
+  - name: Install stuff we need.
+    apt:
+      name:
+        - htop
+        - mc
+        - nmap

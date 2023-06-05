@@ -4,6 +4,11 @@
   connection: local
   become: true
 
+  pre_tasks:
+    - name: Update repo's
+      apt:
+        update_cache: yes
+      changed_when: False  
   tasks:
     - name: Zet de motd file.
       template:
@@ -13,8 +18,4 @@
         group: root
         mode: "0644"
 
-    - name: Install software
-      apt:
-        name: 
-          - htop
-          - mc
+    - include: tasks/packages.yml
