@@ -1,0 +1,23 @@
+---
+blabla:
+  - hallo
+  - daar
+  - hoe 
+  - is 
+  - het
+
+color: blue
+
+machines:
+  "sub.domain1":
+    - name: host1
+      ip: 192.168.1.2
+    - name: host2
+      ip: 192.168.1.3
+  "sub.domain2":
+    - name: node1
+      ip: 192.168.1.200
+    - name: node2
+      ip: 192.168.1.201
+    - name: node3
+      ip: 192.168.1.202

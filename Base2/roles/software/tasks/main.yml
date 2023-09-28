@@ -1,0 +1,10 @@
+---
+# tasks file for software
+- name: Install software.
+  apt:
+    name:
+     - htop
+     - git
+     - vim
+     - mc
+     - tcpdump
