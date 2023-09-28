@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  become: true
+  gather_facts: true  
+  roles:
+    - clamav
+    - user
+    - software
+
+  tasks:
+    - name: install bash aliassen.
+      ansible.builtin.copy:     
+       src: ./files/alias
+       dest: /home/jeroen/.bash_aliases  
+       owner: jeroen
+       group: jeroen
+
+    - name: install vimrc file.
+      ansible.builtin.copy:     
+       src: ./files/vimrc
+       dest: /home/jeroen/.vimrc  
+       owner: jeroen
+       group: jeroen
+    
+    - name: install bash prompt.
+      ansible.builtin.copy:     
+       src: ./files/bash-prompt
+       dest: /home/jeroen/bash-prompt  
+       owner: jeroen
+       group: jeroen
+
+    - name: Set prompt in .bashrc   
+      lineinfile:
+        path: /home/jeroen/.bashrc
+        line: "source bash-prompt" 
+        state: present
+        backup: yes
+      register: example2out

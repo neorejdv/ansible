@@ -1,0 +1,51 @@
+---
+- name: Ensure that the host has a proper /etc/hosts file filled with all of the hosts on the network
+  block:
+    - name: Template out the /etc/hosts file
+      ansible.builtin.template:
+        src: hosts.j2
+        dest: /tmp/hostsfile
+        owner: root
+        group: root
+        mode: "0644"
+        force: true
+
+    ##########################################################################
+    ##
+    ## Set some variables like fqdn and domainname as they can be used later
+    ## on in other roles.
+    ##
+    ##########################################################################
+    - name: Create a new list of hosts where all the hosts have a domainname
+      ansible.builtin.set_fact:
+        machines_tmp: |
+          [
+          {% for domain in machines %}
+            {% for host in machines[domain] %}
+                "{{ host['name'] }}.{{ domain }}",
+            {% endfor %}
+          {% endfor %}
+          ]
+
+    - name: Loop over the list to find out fqdn based on our hostname
+      ansible.builtin.set_fact:
+        fqdn: "{{ fqdn_tmp }}"
+      loop: "{{ machines_tmp }}"
+      loop_control:
+        loop_var: fqdn_tmp
+      when: inventory_hostname + "." in fqdn_tmp
+
+    - name: Set the variable domainname (1/2)(if sub.domain1)
+      ansible.builtin.set_fact:
+        domainname: "sub.domain1"
+      when: "'sub.domain1' in fqdn"
+
+    - name: Set the variable domainname (2/2)(if sub.domain2)
+      ansible.builtin.set_fact:
+        domainname: "sub.domain2"
+      when: "'sub.domain2' in fqdn"
+
+  rescue:
+    - name: Something went wrong while templating out the /etc/hosts file
+      ansible.builtin.debug:
+        msg: "ERROR: Something went wrong while templating out the /etc/hosts file. Please investigate."

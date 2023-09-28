@@ -1,0 +1,109 @@
+---
+- name: Loops with with_ and lookup, query and others
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    beatles:
+      john: guitar - vocals
+      paul: bass - vocals
+      ringo: drums - vocals
+      george: guitar - vocals
+    people:
+      - john
+      - paul
+      - mary
+    drinks:
+      - beer
+      - wine
+      - whisky
+
+  tasks:
+    - name: with_items loop
+      debug:
+        msg: "with_items: item is '{{ item }}'"
+      with_items: "{{ people }}"
+
+    - name: with loop
+      debug:
+        msg: "loop: item is '{{ item }}'"
+      loop: "{{ people }}"
+
+    - name: with nested
+      debug:
+        msg: "with_nested: item[0] is '{{ item[0] }}' and item[1] is '{{ item[1] }}'"
+      with_nested:
+        - "{{ people }}"
+        - "{{ drinks }}"
+
+    - name: nested and loop
+      debug:
+        msg: "nested_loop: item[0] is '{{ item[0] }}' and item[1] is '{{ item[1] }}'"
+      loop:
+        - "{{ people }}"
+        - "{{ drinks }}"
+
+    # This example gives a Cartesian product of people with drinks. Way more than you want
+    #- name: nested and lookup (this is wrong!!!)
+    #  debug:
+    #    msg: "with_nested_lookup: item[0] is '{{ item[0] }}' and item[1] is '{{ item[1] }}'"
+    #  with_nested: "{{ lookup('nested', people, drinks, wantlist=True ) }}"
+
+    - name: nested with loop and lookup
+      debug:
+        msg: "nested_loop_lookup: item[0] is '{{ item[0] }}' and item[1] is '{{ item[1] }}'"
+      loop: "{{ lookup('nested', people, drinks, wantlist=True ) }}"
+
+    - name: nested with loop and query
+      debug:
+        msg: "nested_loop_query: item[0] is '{{ item[0] }}' and item[1] is '{{ item[1] }}'"
+      loop: "{{ query('nested', people, drinks ) }}"
+
+    - name: with dict
+      debug:
+        msg: "with_dict: item.key is '{{ item.key }}' and item.value is '{{ item.value }}'"
+      with_dict: "{{ beatles }}"
+
+    - name: with dict lookup
+      debug:
+        msg: "with_dict_lookup: item.key is '{{ item.key }}' and item.value is '{{ item.value }}'"
+      loop: "{{ lookup('dict', beatles) }}"
+
+    - name: with dict query
+      debug:
+        msg: "with_dict_query: item.key is '{{ item.key }}' and item.value is '{{ item.value }}'"
+      loop: "{{ query('dict', beatles) }}"
+
+    - name: with dict2items
+      debug:
+        msg: "with_dict2items: item.key is '{{ item.key }}' and item.value is '{{ item.value }}'"
+      loop: "{{ beatles | dict2items }}"
+
+    - name: with sequence loop
+      debug:
+        msg: "with_sequence: item is '{{ item }}'"
+      # end is inclusive of the end point
+      with_sequence:
+        start=0
+        end=10
+        stride=2
+        format=guru_%02x
+
+    - name: with sequence loop and lookup
+      debug:
+        msg: "sequence_lookup: item is '{{ item }}'"
+      # end is inclusive of the end point
+      loop: "{{ lookup('sequence', 'start=0 end=10 stride=2 format=guru_%02x', wantlist=True) }}"
+
+    - name: with sequence loop and query
+      debug:
+        msg: "sequence_query: item is '{{ item }}'"
+      # end is inclusive of the end point
+      loop: "{{ query('sequence', 'start=0 end=10 stride=2 format=guru_%02x') }}"
+
+    - name: with_sequence loop and range
+      debug:
+              msg: "loop_range: item is {{ 'guru_%02x' | format(item) }}"
+      # range is exclusive of the end point
+      loop: "{{ range(0, 10 + 1, 2) | list }}"
+

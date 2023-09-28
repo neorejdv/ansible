@@ -1,0 +1,4 @@
+alias ap="ansible-playbook"
+alias aps="ansible-playbook --syntax-check"
+export EDITOR='vim'
+export VISUAL='vim'

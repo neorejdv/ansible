@@ -1,0 +1,246 @@
+" Vim RC file created by Jeroen de Vries
+" -> Helper functions
+" -> Helper functions
+" date: 22-1-2020
+" Deze vimrc file bevat handige tweaks en tunes om te gebruiken in VIm
+ 
+" Version: 1.0
+"
+" Changelog:
+" V1.0 initiele versie.
+"
+" Afkortingen in VIMrc:
+" ai = auto indent
+" et = expand tab
+" sw = Shift with x space
+" ts = tabstop is x spaces
+" cuc = column vert bar
+" cul = column horz bar
+ 
+ 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => General
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+ 
+"sets how many lines of history VIM has to remember
+set history=500
+ 
+" Enable filetype plugins
+filetype plugin on
+filetype indent on
+ 
+" Set to auto read when a file is changed from the outside
+set autoread
+ 
+" Fast saving
+" nmap <leader>w :w!<cr>
+" :W sudo saves the file
+" (useful for handling the permission-denied error)
+ 
+command W w !sudo tee % > /dev/null
+ 
+" Set paste option.
+set paste
+ 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+ 
+" Set 7 lines to the cursor - when moving vertically using j/k
+set so=7
+ 
+" Avoid garbled characters in Chinese language windows OS
+"let $LANG='en'
+"set langmenu=en
+"source $VIMRUNTIME/delmenu.vim
+"source $VIMRUNTIME/menu.vim
+ 
+"Always show current position
+set ruler
+ 
+" Height of the command bar
+set cmdheight=2
+ 
+" A buffer becomes hidden when it is abandoned
+set hid
+ 
+"Ignore case when searching
+set ignorecase
+ 
+" When searching try to be smart about cases
+set smartcase
+ 
+" Highlight search results
+set hlsearch
+ 
+" Makes search act like search in modern browsers
+set incsearch
+ 
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
+ 
+" For regular expressions turn magic on
+set magic
+ 
+" Show matching brackets when text indicator is over them
+set showmatch
+ 
+" How many tenths of a second to blink when matching brackets
+set mat=2
+ 
+" Add a bit extra margin to the left
+"set foldcolumn=1
+ 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+ 
+" Enable syntax highlighting
+syntax enable
+ 
+" Set color scheme
+" coiches are:
+" blue,darkblue,default,delek,desert,elflord,evening,koehler,moring,murphy,pablo,peachpuff,ron,shine,slate,torte,zellner
+ 
+colorscheme elflord
+ 
+" Set color scheme for better readabilty
+set bg=dark
+ 
+if &bg == 'dark'
+  hi CursorLine gui=NONE guibg=#333333
+  else
+    hi CursorLine gui=NONE guibg=#CCCCCC
+endif
+ 
+hi! link CursorColumn CursorLine
+ 
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
+ 
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+ 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+ 
+" Use spaces instead of tabs
+set expandtab
+ 
+" Be smart when using tabs ;)
+set smarttab
+ 
+" 1 tab == 2 spaces
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
+ 
+""""""""""""""""""""""""""""""
+" => Status line
+""""""""""""""""""""""""""""""
+ 
+" Always show the status line
+set laststatus=2
+ 
+""""""""""""""""""""""""""""""
+" => File specific settings
+""""""""""""""""""""""""""""""
+ 
+" If the file is a yaml file use:
+autocmd FileType yaml setlocal ai et sw=2 ts=2 cuc cul
+autocmd FileType sh  setlocal ai et sw=2 ts=2 cul
+ 
+""""""""""""""""""""""""""""""
+" => Keyboard mappings
+""""""""""""""""""""""""""""""
+ 
+" Toggle line numers on and off with Ctrl N
+nmap <C-n> :set invnumber<CR>
+ 
+" Toggle paste mode on and off with Ctrl P
+map <C-p> :setlocal paste!<CR>
+ 
+" vi: set sw=4 ts=4 ai:
+"
+" To start vim without loading any .vimrc or plugins, use:
+"     vim -u NONE
+"
+ 
+" Make sure we are modern and use the one and only encoding
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8
+" Use vim settings, rather then vi settings (much better!)
+" This must be first, because it changes other options as a side effect.
+set nocompatible                " vim like real VI. You're nuts!!
+ 
+" General settings, for all files
+syntax on
+set ai                              " always set autoindenting on
+set autoindent                      " always set autoindenting on
+set background=light                " assume a dark background
+set backspace=indent,eol,start      " define how the backspace reacts
+set bs=2                            " allow backspacing over everything
+set copyindent                      " copy indentation on autoindenting
+set encoding=utf-8                  " use utf-8 as default encoding
+set fileformats="unix,dos,mac"      " which types are supported
+set formatoptions+=1                " when wrapping paragraphs, don't end lines
+set hlsearch                        " highlight search terms
+set ignorecase                      " ignore case when searching
+set incsearch                       " show search matches as you type
+set listchars=tab:»·,trail:·        " but define how they should appear
+set modeline                        " allow the last line to be a mode line
+set modelines=4                     " number of mode lines
+set nobackup                        " do not keep a backup file
+set noerrorbells                    " stop whining about everything
+set noexpandtab                     " keep tabs as they are
+set nolist                          " do not show the list chars
+set noswapfile                      " do not write annoying swapfiles
+" set number                          " I like these old-fashioned line numbers
+set scrolloff=4                     " keep 4 lines off the edges of the screen
+set shiftround                      " use multiple of shiftwidth when indenting
+set shiftwidth=4                    " how much to shift (>>)
+set showcmd                         " display incomplete commands
+set showmode                        " show the current mode !!YES!!
+set smartcase                       " ignore case if search pattern is all lowercase,
+set smarttab                        " insert tabs on the start of a line according to sw
+set softtabstop=4                   " Tabstop width to 4
+set tabstop=4                       " Tabstop width to 4
+set viminfo=                        " no viminfo stuff
+if v:version >= 700
+set numberwidth=6
+endif
+ 
+"set mouse=a
+behave xterm
+set selectmode=mouse
+ 
+" Don't use Ex mode, use Q for formatting
+map Q gq
+map q gq}
+ 
+" For CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_regexp = 1
+let g:ctrlp_working_path_mode = 'ra'
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.tgz,*.gz
+ 
+autocmd FileType yaml setlocal ai et sw=2 ts=2 cuc cul
+autocmd FileType sh  setlocal ai et sw=2 ts=2 cul
+ 
+" Special settings for Yaml
+augroup ansible
+autocmd!
+autocmd BufEnter *.yml,*.yaml syntax on
+autocmd BufEnter *.yml,*.yaml set autoindent
+autocmd BufEnter *.yml,*.yaml set backspace=indent,eol,start
+autocmd BufEnter *.yml,*.yaml set expandtab
+autocmd BufEnter *.yml,*.yaml set shiftwidth=2
+autocmd BufEnter *.yml,*.yaml set softtabstop=2
+autocmd BufEnter *.yml,*.yaml set tabstop=2
+augroup END

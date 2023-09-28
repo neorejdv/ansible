@@ -1,0 +1,16 @@
+---
+- name: add myself to sudoers.
+  lineinfile:
+   path: /etc/sudoers
+   state: present 
+   line: 'jeroen ALL=(ALL) NOPASSWD: ALL'
+   validate: 'visudo -cf %s'
+   tags: user
+
+- name: Add myself to wheel group
+  ansible.builtin.user:
+    name: jeroen
+    shell: /bin/bash
+    groups: sudo,clamav
+    append: yes
+    tags: user 

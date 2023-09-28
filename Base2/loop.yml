@@ -1,0 +1,73 @@
+---
+- name: Loops with with_ and lookup, query and others
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    beatles:
+      john: guitar - vocals
+      paul: bass - vocals
+      ringo: drums - vocals
+      george: guitar - vocals
+    people:
+      - john
+      - paul
+      - mary
+    drinks:
+      - beer
+      - wine
+      - whisky
+
+  vars_files:
+     - varfile.yml
+
+  tasks:
+    - name: with_items loop
+      debug:
+        msg: "with_items: item is '{{ item }}'"
+      with_items: "{{ people }}"
+
+    - name: with loop
+      debug:
+        msg: "loop: item is '{{ item }}'"
+      loop: "{{ people }}"
+
+#    - name: loop.
+#      debug:
+#        msg: "{{ color }}"
+
+    - name: Set hosts in hosts file.
+      shell: "echo {{ item }}"
+      loop: "{{ blabla }}"
+      #loop_control:
+      #  pause: 3
+      tags: loop
+    
+    - name: Add users
+      user:
+        name: "{{ item.username }}"
+        password: "{{ item.pass | password_hash('sha512') }}"
+      loop: "{{ dbusers }}"
+      tags: users
+
+    - name: loop in file. 
+      lineinfile:
+        path: /tmp/testfile
+        line: '{{ item }}'
+        loop: "{{ bla }}"
+        state: present
+        create: yes 
+        register: testloopje  
+      tags: loop
+
+#    - name: Add some lines to /tmp/hosts
+#      blockinfile:
+#        path: /tmp/hosts
+#        marker: "#Extra hosts gezet door ansible"
+#        block: |
+#          10.10.10.10 bla bla.host.com
+#          10.10.10.11 bla1 bla1.host.com
+#        create: yes
+#        state: present
+#      tags: hostfile
+    #  
