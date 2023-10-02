@@ -1,0 +1,31 @@
+---
+- name: Search for package
+  hosts: localhost
+  gather_facts: yes
+  become: no
+  become_method: sudo
+
+  vars:
+    package: 
+      - htop
+      - mc
+      - nmap
+      - clamav
+      - chromium 
+      - libwebP 
+
+  tasks:
+  - name: Gather Package facts
+    package_facts: manager=auto
+
+  - name : Check if package is installed or not.
+    debug: msg="Package {{ item }} on {{ ansible_hostname }} IS installed"
+    when: "'{{ item }}' in ansible_facts.packages"
+    with_items:
+      - "{{ package }}"
+
+  - name : Validate whether package is installed or not.
+    debug: msg="Package {{ item }} on {{ ansible_hostname }} is NOT installed"
+    when: "'{{ item }}' not in ansible_facts.packages"
+    with_items:
+      - "{{ package }}"
