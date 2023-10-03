@@ -1,31 +1,45 @@
 ---
-- name: Search for package
+- name: Search for package(s)
   hosts: localhost
   gather_facts: yes
   become: no
   become_method: sudo
 
   vars:
+    log_date: "{{ ansible_date_time.iso8601 }}"
+    log_dir: "/tmp"
+    log_file: "{{ log_dir}}/{{ inventory_hostname }}.{{ log_date }}.log"
     package: 
       - htop
       - mc
-      - nmap
-      - clamav
       - chromium 
-      - libwebP 
+      - libwebp 
 
   tasks:
-  - name: Gather Package facts
-    package_facts: manager=auto
 
-  - name : Check if package is installed or not.
-    debug: msg="Package {{ item }} on {{ ansible_hostname }} IS installed"
+  - name: Gather the package facts
+    ansible.builtin.package_facts:
+      manager: auto
+
+  - name: Check whether a package is installed
+    ansible.builtin.debug:
+       #msg="Package {{ item }} version"."{{ansible_facts.packages[ item ][0].version }}"
+       msg="*Package {{ item }} version; {{ansible_facts.packages[ item ][0].version }}*"
     when: "'{{ item }}' in ansible_facts.packages"
     with_items:
       - "{{ package }}"
+    register: outp
 
-  - name : Validate whether package is installed or not.
-    debug: msg="Package {{ item }} on {{ ansible_hostname }} is NOT installed"
-    when: "'{{ item }}' not in ansible_facts.packages"
-    with_items:
-      - "{{ package }}"
+  - name: Create your local file on master node
+    ansible.builtin.file:
+      path: "{{ log_file }}"
+      state: touch 
+      owner: jeroen
+      group: jeroen
+      mode: '0644'
+    delegate_to: localhost
+  
+  - name: save output to local directory
+    ansible.builtin.copy:
+      content: "{{ outp | replace('\\n', '\n') }}" 
+      dest: "{{ log_file }}"
